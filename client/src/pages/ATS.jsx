@@ -1,0 +1,1 @@
+import React from 'react'; function ATS() { return <h1>ATS Scanner</h1>; } export default ATS;

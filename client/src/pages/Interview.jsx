@@ -1,0 +1,1 @@
+import React from 'react'; function Interview() { return <h1>Interview Prep</h1>; } export default Interview;

@@ -1,0 +1,213 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(5, 5, 14, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left, .right, .center {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+.appName {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.center {
+  gap: 8px;
+}
+
+.navLink {
+  color: var(--text-300);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+.navLink:hover {
+  color: var(--text-100);
+  background: var(--bg-700);
+}
+
+.activeLink {
+  composes: navLink;
+  color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.right {
+  gap: 12px;
+}
+
+.iconButton {
+  background: none;
+  color: var(--text-300);
+  font-size: 20px;
+  padding: 6px;
+  border-radius: 50%;
+}
+.iconButton:hover {
+  background: var(--bg-700);
+  color: var(--text-100);
+}
+
+.notifWrapper, .userMenuWrapper {
+  position: relative;
+}
+
+.notifBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  border: 1.5px solid var(--bg-800);
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 140%;
+  background: var(--bg-800);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 320px;
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  overflow: hidden;
+}
+
+.dropdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.dropdownHeader strong {
+  font-weight: 600;
+}
+
+.markAllRead {
+  background: none;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.notifList {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notifItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+}
+.notifItem:last-child {
+  border-bottom: none;
+}
+.notifItem:hover {
+  background: var(--bg-700);
+}
+
+.notifDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.notifMessage {
+  font-size: 13px;
+  color: var(--text-200);
+  line-height: 1.4;
+}
+
+.notifTime {
+  font-size: 11px;
+  color: var(--text-400);
+}
+
+.notifItem.read .notifDot {
+  background: var(--bg-600);
+}
+.notifItem.read .notifMessage {
+  color: var(--text-400);
+}
+
+.emptyNotifs {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-400);
+  font-size: 14px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-dark);
+  color: var(--text-100);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdownItem {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 14px;
+    background: none;
+    color: var(--text-200);
+}
+.dropdownItem:hover {
+    background: var(--bg-700);
+    color: var(--text-100);
+}
+.dropdownItem.logout {
+    color: var(--danger);
+}
+
+@media (max-width: 768px) {
+  .center {
+    display: none;
+  }
+}
