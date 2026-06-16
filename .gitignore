@@ -1,0 +1,11 @@
+# Dependencies
+node_modules
+.env
+dist
+.DS_Store
+*.log
+ARCHITECTURE.md
+CONVENTIONS.md
+FEATURES.md
+# .gitignore
+PROMPTS_CONTEXT.md
