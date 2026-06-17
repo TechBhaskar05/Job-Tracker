@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@huggingface/inference": "^4.13.19",
     "@langchain/community": "^1.1.29",
     "@langchain/core": "^1.1.49",
     "@langchain/groq": "^1.2.1",
