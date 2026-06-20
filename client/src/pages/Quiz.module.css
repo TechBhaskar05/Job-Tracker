@@ -1,0 +1,304 @@
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-300);
+  background: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.tab:hover {
+  color: var(--text-100);
+}
+
+.tabActive {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-100);
+}
+
+.subtitle {
+  color: var(--text-300);
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+.topicInput {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Skeleton loading */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Quiz state */
+.quizHeader {
+  margin-bottom: 24px;
+}
+
+.progressLabel {
+  font-size: 13px;
+  color: var(--text-300);
+  margin-bottom: 8px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-700);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.questionText {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-100);
+  padding: 24px 0;
+  line-height: 1.5;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.optionBtn {
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-200);
+  background: transparent;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+}
+.optionBtn:hover:not(:disabled) {
+  background: var(--bg-700);
+  border-color: var(--border-bright);
+}
+
+.optionDefault {
+  cursor: pointer;
+}
+
+.optionCorrect {
+  background: var(--success-tint) !important;
+  border-color: var(--success) !important;
+  color: var(--success) !important;
+}
+
+.optionWrong {
+  background: var(--danger-tint) !important;
+  border-color: var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+.optionDimmed {
+  opacity: 0.4;
+  cursor: not-allowed !important;
+}
+
+.optionLabel {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.optionIcon {
+  margin-left: auto;
+  font-size: 16px;
+}
+
+/* Results */
+.resultsSection {
+  text-align: center;
+  padding: 32px 0;
+}
+
+.scoreDisplay {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.scoreLabel {
+  color: var(--text-400);
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.motivation {
+  color: var(--text-300);
+  font-size: 16px;
+  margin-bottom: 32px;
+}
+
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.reviewItem {
+  background: var(--bg-800);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.reviewHeader {
+  width: 100%;
+  padding: 14px 16px;
+  background: none;
+  color: var(--text-200);
+  font-size: 14px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.reviewHeader:hover {
+  background: var(--bg-700);
+}
+
+.reviewArrow {
+  transition: transform 0.2s ease;
+  font-size: 12px;
+  color: var(--text-400);
+}
+
+.reviewArrowOpen {
+  transform: rotate(90deg);
+}
+
+.reviewBody {
+  padding: 0 16px 14px;
+  font-size: 14px;
+  color: var(--text-200);
+}
+
+.correctAnswer {
+  color: var(--success);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.resultsActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* History tab */
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historyTable th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-400);
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.historyTable td {
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-200);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.scoreBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.scoreHigh {
+  background: var(--success-tint);
+  color: var(--success);
+}
+
+.scoreMid {
+  background: var(--warning-tint);
+  color: var(--warning);
+}
+
+.scoreLow {
+  background: var(--danger-tint);
+  color: var(--danger);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 64px 0;
+}
+
+.emptyIcon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.emptyText {
+  color: var(--text-300);
+  font-size: 14px;
+  margin-bottom: 16px;
+}

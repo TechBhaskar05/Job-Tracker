@@ -2,18 +2,17 @@ import { getLlmPrecise } from '../lib/groq.js'
 import { ChatPromptTemplate } from '@langchain/core/prompts'
 import { StringOutputParser } from '@langchain/core/output_parsers'
 
+const FORMAT_DESC = 'Each object must have: "question" (string), "options" (array of 4 strings), "answer" (0-based index of correct option as integer 0-3).'
+
 const PROMPT_TEMPLATE = `Generate exactly 5 multiple-choice questions about: {topic}
-Return ONLY a valid JSON array, no markdown, no explanation:
-[{"question":"...","options":["A","B","C","D"],"answer":0}]
-answer is the 0-based index of the correct option.
+Return ONLY a valid JSON array, no markdown, no explanation.
+${FORMAT_DESC}
 Questions should progress from basic to advanced.
 Be specific, accurate, and educational.`
 
 const STRICTER_PROMPT = `Generate exactly 5 multiple-choice questions about: {topic}
 Return ONLY a valid JSON array. No markdown. No explanation. No code fences.
-Example format:
-[{"question":"What is React?","options":["Library","Framework","Language","Database"],"answer":0}]
-answer must be an integer 0, 1, 2, or 3.
+${FORMAT_DESC}
 Make sure the JSON is valid and parseable.`
 
 function stripFences(raw) {

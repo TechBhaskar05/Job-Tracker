@@ -115,6 +115,33 @@ router.patch('/:id', async (req, res, next) => {
 });
 
 /**
+ * POST /api/jobs/:id/ats-score
+ * Save an ATS score to a job application
+ */
+router.post('/:id/ats-score', async (req, res, next) => {
+  try {
+    const { score } = req.body;
+    if (score == null || typeof score !== 'number') {
+      return res.status(400).json({ error: 'score is required and must be a number' });
+    }
+
+    const job = await Job.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      { atsScore: score },
+      { new: true }
+    );
+
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found or you do not have permission to edit it' });
+    }
+
+    res.status(200).json({ message: 'ATS score saved', atsScore: job.atsScore });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * DELETE /api/jobs/:id
  * Delete a job application
  */
