@@ -1,18 +1,9 @@
-import { Router } from 'express'
-import auth from '../middleware/auth.js'
-import { tailorResume } from '../agents/tailor.js'
+import { Router } from 'express';
+import auth from '../middleware/auth.js';
+import { tailor } from '../controllers/agentsController.js';
 
-const router = Router()
+const router = Router();
 
-router.post('/tailor', auth, async (req, res, next) => {
-  try {
-    const { jobId } = req.body
-    if (!jobId) return res.status(400).json({ error: 'jobId is required' })
-    const result = await tailorResume(jobId, req.user.id)
-    res.json(result)
-  } catch (err) {
-    next(err)
-  }
-})
+router.post('/tailor', auth, tailor);
 
-export default router
+export default router;
