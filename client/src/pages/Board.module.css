@@ -3,11 +3,17 @@
   max-width: 100%;
 }
 
-.statsBar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.statsRow {
+  display: flex;
   gap: 16px;
   margin-bottom: 24px;
+}
+
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  flex: 1;
 }
 
 .statCard {
@@ -35,11 +41,33 @@
   color: var(--text-300);
 }
 
+.chartCard {
+  background: var(--bg-800);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chartTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-300);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
 .columnsContainer {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  padding-bottom: 16px; /* For scrollbar */
+  padding-bottom: 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .fab {
@@ -57,6 +85,7 @@
   box-shadow: var(--shadow-accent);
   transition: var(--transition);
   z-index: 100;
+  border: none;
 }
 
 .fab:hover {
@@ -127,4 +156,25 @@
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+@media (max-width: 768px) {
+  .board {
+    padding: 16px;
+  }
+  .statsRow {
+    flex-direction: column;
+  }
+  .chartCard {
+    min-width: unset;
+  }
+  .columnsContainer {
+    gap: 12px;
+  }
+  .statCard {
+    padding: 12px;
+  }
+  .statValue {
+    font-size: 24px;
+  }
 }

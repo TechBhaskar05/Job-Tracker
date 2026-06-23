@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DndContext, DragOverlay, closestCorners } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import PageLayout from '../components/layout/PageLayout';
+import PageTransition from '../components/layout/PageTransition';
 import KanbanColumn from '../components/kanban/KanbanColumn';
 import JobCard from '../components/kanban/JobCard';
 import AddJobModal from '../components/kanban/AddJobModal';
@@ -71,6 +73,26 @@ const Board = () => {
     }
   }, [jobs]);
 
+  const weeklyData = useMemo(() => {
+    const weeks = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const start = new Date(now);
+      start.setDate(start.getDate() - start.getDay() - i * 7);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 7);
+      weeks.push({
+        label: start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        count: jobs.filter(j => {
+          const d = new Date(j.appliedAt || j.createdAt);
+          return d >= start && d < end;
+        }).length,
+      });
+    }
+    return weeks;
+  }, [jobs]);
+
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveJob(jobs.find(job => job._id === active.id) || null);
@@ -92,7 +114,6 @@ const Board = () => {
   
     const originalJobs = [...jobs];
   
-    // Optimistic update
     setJobs(prev => prev.map(j => j._id === active.id ? { ...j, stage: overStage } : j));
   
     try {
@@ -100,7 +121,7 @@ const Board = () => {
       showToast('Job stage updated!', 'success');
     } catch (error) {
       showToast('Failed to update job stage.', 'error');
-      setJobs(originalJobs); // Revert on error
+      setJobs(originalJobs);
     }
   };
   
@@ -153,15 +174,33 @@ const Board = () => {
 
   return (
     <PageLayout title="Job Board">
-      <div className={styles.board}>
-        <div className={styles.statsBar}>
-          <StatCard icon="💼" value={stats.total} label="Total Applied" color="var(--text-200)" />
-          <StatCard icon="🕒" value={stats.inProgress} label="In Progress" color="var(--warning)" />
-          <StatCard icon="⭐" value={stats.interviews} label="Interviews" color="var(--accent)" />
-          <StatCard icon="🏆" value={stats.offers} label="Offers" color="var(--success)" />
+      <PageTransition>
+        <div className={styles.board}>
+          <div className={styles.statsRow}>
+            <div className={styles.statsBar}>
+              <StatCard icon="💼" value={stats.total} label="Total Applied" color="var(--text-200)" />
+              <StatCard icon="🕒" value={stats.inProgress} label="In Progress" color="var(--warning)" />
+              <StatCard icon="⭐" value={stats.interviews} label="Interviews" color="var(--accent)" />
+              <StatCard icon="🏆" value={stats.offers} label="Offers" color="var(--success)" />
+            </div>
+            <div className={styles.chartCard}>
+              <div className={styles.chartTitle}>Weekly Applications</div>
+              <ResponsiveContainer width="100%" height={100}>
+                <BarChart data={weeklyData}>
+                  <XAxis dataKey="label" tick={{ fill: 'var(--text-400)', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{ background: 'var(--bg-700)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: 12 }}
+                    labelStyle={{ color: 'var(--text-100)' }}
+                    itemStyle={{ color: 'var(--accent)' }}
+                  />
+                  <Bar dataKey="count" fill="var(--accent)" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          {renderBoardContent()}
         </div>
-        {renderBoardContent()}
-      </div>
+      </PageTransition>
       <button className={styles.fab} onClick={() => setIsModalOpen(true)} title="Add new job (N)">+</button>
       <AddJobModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onJobAdded={handleJobAdded} />
     </PageLayout>

@@ -9,6 +9,13 @@
   display: flex;
   flex-direction: column;
   transition: var(--transition-fast);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 768px) {
+  .column {
+    width: 85vw;
+  }
 }
 
 .columnHeader {

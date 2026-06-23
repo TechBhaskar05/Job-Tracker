@@ -35,12 +35,18 @@ const Quiz = () => {
   const [history, setHistory] = useState(null)
   const [resultSaved, setResultSaved] = useState(false)
 
+  const fetchHistory = async () => {
+    try {
+      const { data } = await api.get('/quiz/history')
+      setHistory(data.history || [])
+    } catch {
+      showToast('Failed to load history', 'error')
+    }
+  }
+
   useEffect(() => {
     if (activeTab !== 'history') return
-
-    api.get('/quiz/history')
-      .then(({ data }) => setHistory(data.history || []))
-      .catch(() => showToast('Failed to load history', 'error'))
+    fetchHistory()
   }, [activeTab])
 
   const handleGenerate = async () => {

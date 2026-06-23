@@ -23,15 +23,28 @@ export function getUser() {
  * @param {string} token - The auth token.
  * @param {object} user - The user object.
  */
-export function setAuth(token, user) {
+export function setToken(token) {
   localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function setUser(user) {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
-/**
- * Removes the auth token and user object from local storage.
- */
-export function clearAuth() {
+export function clearToken() {
   localStorage.removeItem(TOKEN_KEY);
+}
+
+export function clearUser() {
   localStorage.removeItem(USER_KEY);
+}
+
+export function setAuth(token, user) {
+  setToken(token);
+  setUser(user);
+}
+
+export function clearAuth() {
+  clearToken();
+  clearUser();
 }

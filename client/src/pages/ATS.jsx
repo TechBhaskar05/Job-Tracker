@@ -111,15 +111,6 @@ const ATS = () => {
     setGaugeValue(CIRCUMFERENCE)
   }
 
-  const handleSaveScore = async () => {
-    try {
-      await api.post(`/jobs/${jobId}/ats-score`, { score: result.score })
-      showToast('Score saved to job!', 'success')
-    } catch {
-      showToast('Failed to save score', 'error')
-    }
-  }
-
   const renderDropZone = () => (
     <div
       className={`${styles.dropZone} ${dragActive ? styles.dropZoneActive : ''}`}
@@ -237,8 +228,8 @@ const ATS = () => {
             Analyse Another Resume
           </Button>
           {jobId && (
-            <Button variant="ghost" onClick={handleSaveScore}>
-              Save Score to Job
+            <Button variant="ghost" onClick={handleReset}>
+              New Analysis
             </Button>
           )}
         </div>

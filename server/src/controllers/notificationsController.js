@@ -18,8 +18,8 @@ export const getCount = asyncHandler(async (req, res) => {
 });
 
 export const markRead = asyncHandler(async (req, res) => {
-  const notification = await Notification.findByIdAndUpdate(
-    req.params.id,
+  const notification = await Notification.findOneAndUpdate(
+    { _id: req.params.id, userId: req.user.id },
     { read: true },
     { new: true }
   );

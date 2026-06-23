@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { clearAuth, getUser } from '../../lib/auth';
 import api from '../../lib/api';
+import Skeleton from '../ui/Skeleton';
 import styles from './Navbar.module.css';
 
 const timeAgo = (date) => {
@@ -26,9 +27,12 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState([]);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [notifLoading, setNotifLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const notifRef = useRef(null);
   const userMenuRef = useRef(null);
+  const mobileRef = useRef(null);
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -53,6 +57,9 @@ const Navbar = () => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
+      if (mobileRef.current && !mobileRef.current.contains(event.target) && !event.target.closest(`.${styles.hamburger}`)) {
+        setMobileMenuOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -64,14 +71,18 @@ const Navbar = () => {
   };
   
   const handleNotifToggle = async () => {
-    setIsNotifOpen(prev => !prev);
-    if (!isNotifOpen) {
-        try {
-            const { data } = await api.get('/notifications');
-            setNotifications(data);
-        } catch (error) {
-            console.error("Failed to fetch notifications");
-        }
+    const willOpen = !isNotifOpen;
+    setIsNotifOpen(willOpen);
+    if (willOpen) {
+      setNotifLoading(true);
+      try {
+        const { data } = await api.get('/notifications');
+            setNotifications(data.notifications);
+      } catch (error) {
+        console.error("Failed to fetch notifications");
+      } finally {
+        setNotifLoading(false);
+      }
     }
   };
   
@@ -85,69 +96,117 @@ const Navbar = () => {
       }
   };
 
-  const handleNotificationClick = (notif) => {
-      // Mark as read logic could go here
+  const handleNotificationClick = async (notif) => {
+      try {
+        if (!notif.read) {
+          await api.patch(`/notifications/${notif._id}/read`);
+          setUnreadCount(prev => Math.max(0, prev - 1));
+          setNotifications(prev => prev.map(n => n._id === notif._id ? { ...n, read: true } : n));
+        }
+      } catch (error) {
+        console.error("Failed to mark notification as read");
+      }
       if (notif.jobId) {
           navigate(`/jobs/${notif.jobId}`);
       }
       setIsNotifOpen(false);
   }
 
-  const userInitials = user?.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+  const userInitials = user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
+
+  const closeMobile = () => setMobileMenuOpen(false);
 
   return (
-    <header className={styles.navbar}>
-      <div className={styles.left}>
-        <div className={styles.logo}>JT</div>
-        <span className={styles.appName}>JobTrackr</span>
-      </div>
-      <nav className={styles.center}>
-        <NavLink to="/" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Board</NavLink>
-        <NavLink to="/quiz" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Quiz</NavLink>
-        <NavLink to="/ats" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>ATS Analyser</NavLink>
-        <NavLink to="/roadmap" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Roadmap</NavLink>
-      </nav>
-      <div className={styles.right}>
-        <div className={styles.notifWrapper} ref={notifRef}>
-          <button onClick={handleNotifToggle} className={styles.iconButton}>
-            🔔
-            {unreadCount > 0 && <span className={styles.notifBadge}></span>}
+    <>
+      <header className={styles.navbar}>
+        <div className={styles.left}>
+          <button className={styles.hamburger} onClick={() => setMobileMenuOpen(prev => !prev)}>
+            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
           </button>
-          {isNotifOpen && (
-            <div className={styles.dropdown}>
-              <div className={styles.dropdownHeader}>
-                <strong>Notifications</strong>
-                <button onClick={handleMarkAllRead} className={styles.markAllRead}>Mark all read</button>
-              </div>
-              <div className={styles.notifList}>
-                {notifications.length > 0 ? notifications.map(notif => (
-                  <div key={notif._id} className={`${styles.notifItem} ${notif.read ? styles.read : ''}`} onClick={() => handleNotificationClick(notif)}>
-                    <div className={styles.notifDot}></div>
-                    <div>
-                      <p className={styles.notifMessage}>{notif.message}</p>
-                      <span className={styles.notifTime}>{timeAgo(notif.createdAt)}</span>
-                    </div>
-                  </div>
-                )) : (
-                  <div className={styles.emptyNotifs}>No new notifications</div>
-                )}
-              </div>
-            </div>
-          )}
+          <div className={styles.logo}>JT</div>
+          <span className={styles.appName}>JobTrackr</span>
         </div>
-        <div className={styles.userMenuWrapper} ref={userMenuRef}>
-            <button onClick={() => setIsUserMenuOpen(prev => !prev)} className={styles.avatar}>
-                {userInitials}
+        <nav className={styles.center}>
+          <NavLink to="/" end className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Board</NavLink>
+          <NavLink to="/quiz" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Quiz</NavLink>
+          <NavLink to="/ats" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>ATS Analyser</NavLink>
+          <NavLink to="/roadmap" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Roadmap</NavLink>
+        </nav>
+        <div className={styles.right}>
+          <div className={styles.notifWrapper} ref={notifRef}>
+            <button onClick={handleNotifToggle} className={styles.iconButton}>
+              🔔
+              {unreadCount > 0 && <span className={styles.notifBadge}></span>}
             </button>
-            {isUserMenuOpen && (
-                <div className={styles.dropdown} style={{width: '180px'}}>
-                    <button onClick={() => { navigate('/profile'); setIsUserMenuOpen(false); }} className={styles.dropdownItem}>Profile</button>
-                    <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logout}`}>Logout</button>
+            {isNotifOpen && (
+              <div className={`${styles.dropdown} ${styles.dropdownVisible}`}>
+                <div className={styles.dropdownHeader}>
+                  <strong>Notifications</strong>
+                  <button onClick={handleMarkAllRead} className={styles.markAllRead}>Mark all read</button>
                 </div>
+                <div className={styles.notifList}>
+                  {notifLoading ? (
+                    <div className={styles.notifSkeletonList}>
+                      {[1,2,3].map(i => (
+                        <div key={i} className={styles.notifSkeletonItem}>
+                          <Skeleton width="8px" height="8px" borderRadius="50%" />
+                          <div style={{flex: 1}}>
+                            <Skeleton height="14px" width="80%" />
+                            <Skeleton height="10px" width="30%" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : notifications.length > 0 ? notifications.map(notif => (
+                    <div key={notif._id} className={`${styles.notifItem} ${notif.read ? styles.read : ''}`} onClick={() => handleNotificationClick(notif)}>
+                      <div className={styles.notifDot}></div>
+                      <div>
+                        <p className={styles.notifMessage}>{notif.message}</p>
+                        <span className={styles.notifTime}>{timeAgo(notif.createdAt)}</span>
+                      </div>
+                    </div>
+                  )) : (
+                    <div className={styles.emptyNotifs}>No new notifications</div>
+                  )}
+                </div>
+              </div>
             )}
+          </div>
+          <div className={styles.userMenuWrapper} ref={userMenuRef}>
+              <button onClick={() => setIsUserMenuOpen(prev => !prev)} className={styles.avatar}>
+                  {userInitials}
+              </button>
+              {isUserMenuOpen && (
+                  <div className={`${styles.dropdown} ${styles.dropdownVisible}`} style={{width: '180px'}}>
+                      <button onClick={() => { navigate('/profile'); setIsUserMenuOpen(false); }} className={styles.dropdownItem}>Profile</button>
+                      <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logout}`}>Logout</button>
+                  </div>
+              )}
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && <div className={styles.drawerOverlay} onClick={() => setMobileMenuOpen(false)} />}
+      <div ref={mobileRef} className={`${styles.drawer} ${mobileMenuOpen ? styles.drawerOpen : ''}`}>
+        <div className={styles.drawerHeader}>
+          <div className={styles.logo}>JT</div>
+          <span className={styles.appName}>JobTrackr</span>
+        </div>
+        <nav className={styles.drawerNav}>
+          <NavLink to="/" end onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Board</NavLink>
+          <NavLink to="/quiz" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Quiz</NavLink>
+          <NavLink to="/ats" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>ATS Analyser</NavLink>
+          <NavLink to="/roadmap" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Roadmap</NavLink>
+          <NavLink to="/profile" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Profile</NavLink>
+        </nav>
+        <div className={styles.drawerFooter}>
+          <button onClick={handleLogout} className={styles.logoutBtn}>Logout</button>
         </div>
       </div>
-    </header>
+    </>
   );
 };
 
