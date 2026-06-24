@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './Skeleton.module.css';
 
 const Skeleton = ({ width, height, borderRadius, className = '' }) => {
   const style = {
@@ -8,7 +7,7 @@ const Skeleton = ({ width, height, borderRadius, className = '' }) => {
     borderRadius: borderRadius || '6px',
   };
 
-  return <div className={`${styles.skeleton} ${className}`} style={style}></div>;
+  return <div className={`animate-pulse bg-bg-800 ${className}`} style={style}></div>;
 };
 
 export default Skeleton;

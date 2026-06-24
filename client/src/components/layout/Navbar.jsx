@@ -3,7 +3,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { clearAuth, getUser } from '../../lib/auth';
 import api from '../../lib/api';
 import Skeleton from '../ui/Skeleton';
-import styles from './Navbar.module.css';
 
 const timeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
@@ -57,7 +56,7 @@ const Navbar = () => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
-      if (mobileRef.current && !mobileRef.current.contains(event.target) && !event.target.closest(`.${styles.hamburger}`)) {
+      if (mobileRef.current && !mobileRef.current.contains(event.target) && !event.target.closest('[data-hamburger]')) {
         setMobileMenuOpen(false);
       }
     };
@@ -118,39 +117,39 @@ const Navbar = () => {
 
   return (
     <>
-      <header className={styles.navbar}>
-        <div className={styles.left}>
-          <button className={styles.hamburger} onClick={() => setMobileMenuOpen(prev => !prev)}>
-            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
-            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
-            <span className={`${styles.hamburgerLine} ${mobileMenuOpen ? styles.open : ''}`}></span>
+      <header className="fixed top-0 left-0 right-0 z-100 bg-bg-950/85 backdrop-blur-xl border-b border-border h-16 px-6 flex items-center justify-between">
+        <div className="flex items-center">
+          <button data-hamburger className="flex md:hidden flex-col gap-1 bg-transparent p-1 mr-3 cursor-pointer" onClick={() => setMobileMenuOpen(prev => !prev)}>
+            <span className={`block w-5 h-0.5 bg-text-300 rounded transition duration-200 ease-out ${mobileMenuOpen ? 'rotate-45 translate-x-[4px] translate-y-[4px]' : ''}`}></span>
+            <span className={`block w-5 h-0.5 bg-text-300 rounded transition duration-200 ease-out ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-5 h-0.5 bg-text-300 rounded transition duration-200 ease-out ${mobileMenuOpen ? '-rotate-45 translate-x-[4px] -translate-y-[4px]' : ''}`}></span>
           </button>
-          <div className={styles.logo}>JT</div>
-          <span className={styles.appName}>JobTrackr</span>
+          <div className="w-8 h-8 bg-accent-tint text-accent rounded flex items-center justify-center font-bold mr-2 shrink-0">JT</div>
+          <span className="text-accent font-bold text-lg">JobTrackr</span>
         </div>
-        <nav className={styles.center}>
-          <NavLink to="/" end className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Board</NavLink>
-          <NavLink to="/quiz" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Quiz</NavLink>
-          <NavLink to="/ats" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>ATS Analyser</NavLink>
-          <NavLink to="/roadmap" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Roadmap</NavLink>
+        <nav className="hidden md:flex items-center gap-2">
+          <NavLink to="/" end className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
+          <NavLink to="/quiz" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Quiz</NavLink>
+          <NavLink to="/ats" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>ATS Analyser</NavLink>
+          <NavLink to="/roadmap" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Roadmap</NavLink>
         </nav>
-        <div className={styles.right}>
-          <div className={styles.notifWrapper} ref={notifRef}>
-            <button onClick={handleNotifToggle} className={styles.iconButton}>
+        <div className="flex items-center gap-3">
+          <div className="relative" ref={notifRef}>
+            <button onClick={handleNotifToggle} className="bg-transparent text-text-300 text-xl p-1.5 rounded-full hover:bg-bg-700 hover:text-text-100 cursor-pointer">
               🔔
-              {unreadCount > 0 && <span className={styles.notifBadge}></span>}
+              {unreadCount > 0 && <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-danger border-2 border-bg-800"></span>}
             </button>
             {isNotifOpen && (
-              <div className={`${styles.dropdown} ${styles.dropdownVisible}`}>
-                <div className={styles.dropdownHeader}>
-                  <strong>Notifications</strong>
-                  <button onClick={handleMarkAllRead} className={styles.markAllRead}>Mark all read</button>
+              <div className="absolute top-[140%] bg-bg-800 border border-border rounded-lg shadow-lg z-50 overflow-hidden right-[-60px] md:right-0 w-[280px] md:w-80">
+                <div className="flex justify-between items-center px-4 py-3 border-b border-border-subtle">
+                  <strong className="font-semibold text-text-100">Notifications</strong>
+                  <button onClick={handleMarkAllRead} className="bg-transparent text-accent text-xs font-medium cursor-pointer">Mark all read</button>
                 </div>
-                <div className={styles.notifList}>
+                <div className="max-h-75 overflow-y-auto">
                   {notifLoading ? (
-                    <div className={styles.notifSkeletonList}>
+                    <div className="p-3 flex flex-col gap-3">
                       {[1,2,3].map(i => (
-                        <div key={i} className={styles.notifSkeletonItem}>
+                        <div key={i} className="flex gap-3 items-center">
                           <Skeleton width="8px" height="8px" borderRadius="50%" />
                           <div style={{flex: 1}}>
                             <Skeleton height="14px" width="80%" />
@@ -160,28 +159,28 @@ const Navbar = () => {
                       ))}
                     </div>
                   ) : notifications.length > 0 ? notifications.map(notif => (
-                    <div key={notif._id} className={`${styles.notifItem} ${notif.read ? styles.read : ''}`} onClick={() => handleNotificationClick(notif)}>
-                      <div className={styles.notifDot}></div>
+                    <div key={notif._id} className="px-4 py-3 border-b border-border-subtle flex gap-3 cursor-pointer hover:bg-bg-700 last:border-b-0" onClick={() => handleNotificationClick(notif)}>
+                      <div className={`w-2 h-2 rounded-full shrink-0 mt-1 ${notif.read ? 'bg-bg-600' : 'bg-accent'}`}></div>
                       <div>
-                        <p className={styles.notifMessage}>{notif.message}</p>
-                        <span className={styles.notifTime}>{timeAgo(notif.createdAt)}</span>
+                        <p className={`text-xs leading-normal ${notif.read ? 'text-text-400' : 'text-text-200'}`}>{notif.message}</p>
+                        <span className="text-[11px] text-text-400">{timeAgo(notif.createdAt)}</span>
                       </div>
                     </div>
                   )) : (
-                    <div className={styles.emptyNotifs}>No new notifications</div>
+                    <div className="text-center py-10 px-5 text-text-400 text-sm">No new notifications</div>
                   )}
                 </div>
               </div>
             )}
           </div>
-          <div className={styles.userMenuWrapper} ref={userMenuRef}>
-              <button onClick={() => setIsUserMenuOpen(prev => !prev)} className={styles.avatar}>
+          <div className="relative" ref={userMenuRef}>
+              <button onClick={() => setIsUserMenuOpen(prev => !prev)} className="w-9 h-9 rounded-full bg-accent-dark text-text-100 font-bold text-sm flex items-center justify-center cursor-pointer shrink-0">
                   {userInitials}
               </button>
               {isUserMenuOpen && (
-                  <div className={`${styles.dropdown} ${styles.dropdownVisible}`} style={{width: '180px'}}>
-                      <button onClick={() => { navigate('/profile'); setIsUserMenuOpen(false); }} className={styles.dropdownItem}>Profile</button>
-                      <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logout}`}>Logout</button>
+                  <div className="absolute right-0 top-[140%] bg-bg-800 border border-border rounded-lg shadow-lg z-50 overflow-hidden" style={{width: '180px'}}>
+                      <button onClick={() => { navigate('/profile'); setIsUserMenuOpen(false); }} className="block w-full text-left px-4 py-2.5 text-sm bg-transparent text-text-200 border-none hover:bg-bg-700 hover:text-text-100 cursor-pointer">Profile</button>
+                      <button onClick={handleLogout} className="block w-full text-left px-4 py-2.5 text-sm bg-transparent text-danger border-none hover:bg-bg-700 hover:text-text-100 cursor-pointer">Logout</button>
                   </div>
               )}
           </div>
@@ -189,21 +188,21 @@ const Navbar = () => {
       </header>
 
       {/* Mobile Drawer */}
-      {mobileMenuOpen && <div className={styles.drawerOverlay} onClick={() => setMobileMenuOpen(false)} />}
-      <div ref={mobileRef} className={`${styles.drawer} ${mobileMenuOpen ? styles.drawerOpen : ''}`}>
-        <div className={styles.drawerHeader}>
-          <div className={styles.logo}>JT</div>
-          <span className={styles.appName}>JobTrackr</span>
+      {mobileMenuOpen && <div className="fixed inset-0 z-99 bg-black/50" onClick={() => setMobileMenuOpen(false)} />}
+      <div ref={mobileRef} className={`fixed top-0 left-[-280px] w-[260px] h-full bg-bg-800 border-r border-border z-101 transition-all duration-300 flex flex-col px-4 py-6 ${mobileMenuOpen ? 'left-0' : ''}`}>
+        <div className="flex items-center mb-8">
+          <div className="w-8 h-8 bg-accent-tint text-accent rounded flex items-center justify-center font-bold mr-2 shrink-0">JT</div>
+          <span className="text-accent font-bold text-lg">JobTrackr</span>
         </div>
-        <nav className={styles.drawerNav}>
-          <NavLink to="/" end onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Board</NavLink>
-          <NavLink to="/quiz" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Quiz</NavLink>
-          <NavLink to="/ats" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>ATS Analyser</NavLink>
-          <NavLink to="/roadmap" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Roadmap</NavLink>
-          <NavLink to="/profile" onClick={closeMobile} className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>Profile</NavLink>
+        <nav className="flex flex-col gap-1 flex-1">
+          <NavLink to="/" end onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
+          <NavLink to="/quiz" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Quiz</NavLink>
+          <NavLink to="/ats" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>ATS Analyser</NavLink>
+          <NavLink to="/roadmap" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Roadmap</NavLink>
+          <NavLink to="/profile" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Profile</NavLink>
         </nav>
-        <div className={styles.drawerFooter}>
-          <button onClick={handleLogout} className={styles.logoutBtn}>Logout</button>
+        <div className="pt-4 border-t border-border-subtle">
+          <button onClick={handleLogout} className="w-full text-left px-3 py-2.5 text-sm bg-transparent text-danger border-none rounded hover:bg-bg-700 cursor-pointer">Logout</button>
         </div>
       </div>
     </>

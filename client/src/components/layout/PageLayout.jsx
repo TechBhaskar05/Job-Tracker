@@ -10,7 +10,7 @@ const PageLayout = ({ children, title }) => {
   }, [title]);
 
   return (
-    <div style={{ paddingTop: '64px', minHeight: '100vh', background: 'var(--bg-950)' }}>
+    <div className="pt-16 min-h-screen bg-bg-950">
       {children}
     </div>
   );
