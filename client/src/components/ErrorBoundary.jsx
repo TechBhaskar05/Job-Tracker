@@ -17,25 +17,14 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          minHeight: '100vh', background: 'var(--bg-950)', padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--bg-800)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)', padding: 48, maxWidth: 480,
-            textAlign: 'center', boxShadow: 'var(--shadow-lg)',
-          }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-            <h2 style={{ color: 'var(--text-100)', marginBottom: 8, fontSize: 24 }}>Something went wrong</h2>
-            <p style={{ color: 'var(--text-300)', fontSize: 14, marginBottom: 24 }}>
+        <div className="flex items-center justify-center min-h-screen bg-bg-950 p-6">
+          <div className="bg-bg-800 border border-border rounded-xl p-12 max-w-[480px] text-center shadow-lg">
+            <div className="text-5xl mb-4">⚠️</div>
+            <h2 className="text-text-100 mb-2 text-2xl">Something went wrong</h2>
+            <p className="text-text-300 text-sm mb-6">
               {process.env.NODE_ENV === 'development' ? this.state.error?.message : 'An unexpected error occurred.'}
             </p>
-            <button onClick={() => window.location.reload()} style={{
-              background: 'var(--accent)', color: '#fff', border: 'none',
-              borderRadius: 'var(--radius-md)', padding: '10px 24px',
-              fontSize: 14, fontWeight: 600, cursor: 'pointer',
-            }}>
+            <button onClick={() => window.location.reload()} className="bg-accent text-white border-none rounded px-6 py-2.5 text-sm font-semibold cursor-pointer">
               Reload Page
             </button>
           </div>

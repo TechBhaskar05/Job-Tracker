@@ -11,15 +11,14 @@ import Skeleton from '../components/ui/Skeleton';
 import Button from '../components/ui/Button';
 import api from '../lib/api';
 import { showToast } from '../lib/toast';
-import styles from './Board.module.css';
 
 const STAGES = ['APPLIED', 'SCREENING', 'INTERVIEW', 'OFFER', 'REJECTED', 'GHOSTED'];
 
 const StatCard = ({ icon, value, label, color }) => (
-  <div className={styles.statCard}>
-    <div className={styles.statIcon} style={{ color }}>{icon}</div>
-    <div className={styles.statValue}>{value}</div>
-    <div className={styles.statLabel}>{label}</div>
+  <div className="p-3 md:px-5 md:py-4 text-center bg-bg-800 border border-border rounded-lg">
+    <div className="text-2xl mb-2" style={{ color }}>{icon}</div>
+    <div className="md:text-3xl text-2xl font-bold text-accent leading-tight">{value}</div>
+    <div className="text-xs text-text-300">{label}</div>
   </div>
 );
 
@@ -132,11 +131,11 @@ const Board = () => {
   const renderBoardContent = () => {
     if (loading) {
       return (
-        <div className={styles.columnsContainer}>
+        <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 [scroll-snap-type:x_mandatory] [-webkit-overflow-scrolling:touch]">
           {STAGES.map(stage => (
-            <div key={stage} className={styles.columnSkeleton}>
-              <h3 className={styles.columnHeaderSkeleton}>{stage}</h3>
-              <div className={styles.cardListSkeleton}>
+            <div key={stage} className="min-w-[320px] shrink-0 bg-bg-800 border border-border rounded-lg p-4 animate-pulse">
+              <h3 className="text-sm font-semibold text-text-400 uppercase tracking-[0.5px] mb-3 py-2 bg-bg-700 rounded h-5 w-[60%]">{stage}</h3>
+              <div className="flex flex-col gap-3">
                 {[...Array(3)].map((_, i) => <Skeleton key={i} height="100px" />)}
               </div>
             </div>
@@ -147,17 +146,17 @@ const Board = () => {
 
     if (jobs.length === 0) {
       return (
-        <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>💼</div>
-          <h2>No jobs yet</h2>
-          <p>Start tracking your applications to see them here.</p>
+        <div className="flex flex-col items-center justify-center py-20 px-6 text-center border-2 border-dashed border-border rounded-xl mt-6">
+          <div className="text-[120px] text-text-400 opacity-50 leading-none">💼</div>
+          <h2 className="text-2xl text-text-100 mt-4">No jobs yet</h2>
+          <p className="text-text-300 mb-6">Start tracking your applications to see them here.</p>
           <Button variant="primary" onClick={() => setIsModalOpen(true)}>Add Your First Application</Button>
         </div>
       );
     }
 
     return (
-      <div className={styles.columnsContainer}>
+      <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 [scroll-snap-type:x_mandatory] [-webkit-overflow-scrolling:touch]">
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
           <SortableContext items={STAGES}>
             {STAGES.map(stage => (
@@ -175,16 +174,16 @@ const Board = () => {
   return (
     <PageLayout title="Job Board">
       <PageTransition>
-        <div className={styles.board}>
-          <div className={styles.statsRow}>
-            <div className={styles.statsBar}>
+        <div className="p-4 md:p-6 max-w-full">
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-4 flex-1">
               <StatCard icon="💼" value={stats.total} label="Total Applied" color="var(--text-200)" />
               <StatCard icon="🕒" value={stats.inProgress} label="In Progress" color="var(--warning)" />
               <StatCard icon="⭐" value={stats.interviews} label="Interviews" color="var(--accent)" />
               <StatCard icon="🏆" value={stats.offers} label="Offers" color="var(--success)" />
             </div>
-            <div className={styles.chartCard}>
-              <div className={styles.chartTitle}>Weekly Applications</div>
+            <div className="bg-bg-800 border border-border rounded-lg p-4 md:min-w-[220px] flex flex-col justify-center">
+              <div className="text-xs font-semibold text-text-300 uppercase tracking-[0.5px] mb-2">Weekly Applications</div>
               <ResponsiveContainer width="100%" height={100}>
                 <BarChart data={weeklyData}>
                   <XAxis dataKey="label" tick={{ fill: 'var(--text-400)', fontSize: 10 }} axisLine={false} tickLine={false} />
@@ -201,7 +200,7 @@ const Board = () => {
           {renderBoardContent()}
         </div>
       </PageTransition>
-      <button className={styles.fab} onClick={() => setIsModalOpen(true)} title="Add new job (N)">+</button>
+      <button className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-accent text-white text-3xl shadow-accent z-100 border-none flex items-center justify-center hover:scale-110 transition-transform" onClick={() => setIsModalOpen(true)} title="Add new job (N)">+</button>
       <AddJobModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onJobAdded={handleJobAdded} />
     </PageLayout>
   );
