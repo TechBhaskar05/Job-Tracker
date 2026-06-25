@@ -5,7 +5,6 @@ import Skeleton from '../components/ui/Skeleton'
 import Button from '../components/ui/Button'
 import api from '../lib/api'
 import { showToast } from '../lib/toast'
-import styles from './Interview.module.css'
 
 const MicIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -35,9 +34,9 @@ function parseFeedback(text) {
 
 function getScoreClass(score) {
   if (score === null) return ''
-  if (score >= 7) return styles.scoreHigh
-  if (score >= 4) return styles.scoreMid
-  return styles.scoreLow
+  if (score >= 7) return 'bg-success-tint text-success'
+  if (score >= 4) return 'bg-warning-tint text-warning'
+  return 'bg-danger-tint text-danger'
 }
 
 const Interview = () => {
@@ -226,16 +225,16 @@ const Interview = () => {
   if (loading) {
     return (
       <PageLayout title="Mock Interview">
-        <div className={styles.container}>
-          <div className={styles.leftPanel} style={{ padding: 24 }}>
-            <Skeleton height={20} width="40%" style={{ marginBottom: 16 }} />
-            <Skeleton height={14} width="60%" style={{ marginBottom: 24 }} />
-            <Skeleton height={4} width="100%" style={{ marginBottom: 24 }} />
-            <Skeleton height={120} width="100%" style={{ marginBottom: 12 }} />
+        <div className="flex flex-col md:flex-row gap-5 p-5 md:h-[calc(100vh-64px)] min-h-[calc(100vh-64px)] bg-bg-950">
+          <div className="flex-[7] flex flex-col min-w-0 bg-bg-900 border border-border rounded-xl overflow-hidden p-6">
+            <Skeleton height={20} width="40%" className="mb-4" />
+            <Skeleton height={14} width="60%" className="mb-6" />
+            <Skeleton height={4} width="100%" className="mb-6" />
+            <Skeleton height={120} width="100%" className="mb-3" />
             <Skeleton height={120} width="80%" />
           </div>
-          <div className={styles.rightPanel}>
-            <Skeleton height={100} width="100%" style={{ marginBottom: 16 }} />
+          <div className="hidden md:flex md:flex-col gap-4 overflow-y-auto min-w-[240px] flex-[3]">
+            <Skeleton height={100} width="100%" className="mb-4" />
             <Skeleton height={160} width="100%" />
           </div>
         </div>
@@ -245,30 +244,44 @@ const Interview = () => {
 
   return (
     <PageLayout title="Mock Interview">
-      <div className={styles.container}>
-        <div className={styles.leftPanel}>
-          <div className={styles.header}>
-            <h2 className={styles.headerTitle}>Mock Interview</h2>
-            <p className={styles.headerSubtitle}>
+      <style>{`
+        @keyframes typingBounce {
+          0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+          40% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes micPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.5); }
+          50% { box-shadow: 0 0 0 8px rgba(248, 113, 113, 0); }
+        }
+        @keyframes wave {
+          0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
+          50% { transform: scaleY(1); opacity: 1; }
+        }
+      `}</style>
+      <div className="flex flex-col md:flex-row gap-5 p-5 md:h-[calc(100vh-64px)] min-h-[calc(100vh-64px)] bg-bg-950">
+        <div className="flex-[7] flex flex-col min-w-0 h-full bg-bg-900 border border-border rounded-xl overflow-hidden">
+          <div className="shrink-0 px-5 py-4 pb-3 border-b border-border">
+            <h2 className="text-base font-bold text-text-100 m-0 mb-0.5">Mock Interview</h2>
+            <p className="text-sm text-text-300 m-0 mb-3">
               {job.role} at {job.company}
             </p>
-            <div className={styles.progressRow}>
-              <div className={styles.progressBar}>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-1 bg-bg-700 rounded overflow-hidden">
                 <div
-                  className={styles.progressFill}
+                  className="h-full bg-accent rounded transition-all duration-300"
                   style={{ width: `${Math.min((questionCount / 10) * 100, 100)}%` }}
                 />
               </div>
-              <span className={styles.progressLabel}>{questionCount} / 10</span>
+              <span className="text-xs text-text-400 shrink-0">{questionCount} / 10</span>
             </div>
           </div>
 
-          <div className={styles.messageList}>
+          <div className="flex-1 overflow-y-auto flex flex-col gap-3 p-4">
             {!isStarted ? (
-              <div className={styles.initialState}>
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-10 gap-3">
                 <MicIcon />
-                <h3 className={styles.initialTitle}>Ready to interview?</h3>
-                <p className={styles.initialSubtitle}>
+                <h3 className="text-xl font-bold text-text-100 m-0">Ready to interview?</h3>
+                <p className="text-sm text-text-300 m-0 mb-2">
                   You are interviewing for {job.role} at {job.company}
                 </p>
                 <Button variant="primary" size="lg" onClick={startInterview} loading={isLoading}>
@@ -278,31 +291,31 @@ const Interview = () => {
             ) : (
               <>
                 {messages.map((msg, idx) => (
-                  <div key={msg.id} className={`${styles.messageRow} ${msg.role === 'ai' ? styles.messageRowAi : styles.messageRowUser}`}>
+                  <div key={msg.id} className={`flex gap-2.5 max-w-[85%] md:max-w-[95%] ${msg.role === 'ai' ? 'self-start' : 'self-end'}`}>
                     {msg.role === 'ai' && (
-                      <div className={styles.avatar}>AI</div>
+                      <div className="w-8 h-8 rounded-full bg-accent-dark flex items-center justify-center text-[11px] font-bold text-text-100 shrink-0 mt-1">AI</div>
                     )}
-                    <div className={styles.messageContent}>
-                      <div className={`${styles.bubble} ${msg.role === 'ai' ? styles.bubbleAi : styles.bubbleUser}`}>
+                    <div className="flex flex-col gap-1">
+                      <div className={`text-sm leading-relaxed px-4 py-3 ${msg.role === 'ai' ? 'bg-bg-700 border border-border rounded-lg rounded-bl text-text-200' : 'bg-accent-tint border border-border-bright rounded-lg rounded-br text-text-100'}`}>
                         {msg.content}
                       </div>
                       {msg.feedback && (
-                        <div className={styles.feedbackCard}>
-                          <div className={styles.feedbackScore}>
+                        <div className="bg-bg-800 border border-border rounded-lg px-4 py-3 mt-2 text-xs leading-relaxed">
+                          <div className="flex items-center gap-2 mb-2 font-semibold text-text-200">
                             Score:
-                            <span className={`${styles.scoreBadge} ${getScoreClass(msg.feedback.score)}`}>
+                            <span className={`inline-flex items-center justify-center min-w-[32px] px-2 py-0.5 rounded-sm text-xs font-bold ${getScoreClass(msg.feedback.score)}`}>
                               {msg.feedback.score}/10
                             </span>
                           </div>
                           {msg.feedback.strong && (
-                            <div className={styles.strongSection}>
-                              <div className={`${styles.sectionLabel} ${styles.labelSuccess}`}>STRONG</div>
+                            <div className="border-l-[3px] border-l-success pl-2.5 mb-1.5 text-text-200">
+                              <div className="text-[11px] font-bold uppercase tracking-[0.5px] mb-0.5 text-success">STRONG</div>
                               {msg.feedback.strong}
                             </div>
                           )}
                           {msg.feedback.improve && (
-                            <div className={styles.improveSection}>
-                              <div className={`${styles.sectionLabel} ${styles.labelWarning}`}>IMPROVE</div>
+                            <div className="border-l-[3px] border-l-warning pl-2.5 text-text-200">
+                              <div className="text-[11px] font-bold uppercase tracking-[0.5px] mb-0.5 text-warning">IMPROVE</div>
                               {msg.feedback.improve}
                             </div>
                           )}
@@ -312,12 +325,12 @@ const Interview = () => {
                   </div>
                 ))}
                 {isLoading && (
-                  <div className={`${styles.messageRow} ${styles.messageRowAi}`}>
-                    <div className={styles.avatar}>AI</div>
-                    <div className={`${styles.bubble} ${styles.bubbleAi} ${styles.typingBubble}`}>
-                      <span className={styles.typingDot} />
-                      <span className={styles.typingDot} />
-                      <span className={styles.typingDot} />
+                  <div className="flex gap-2.5 max-w-[85%] md:max-w-[95%] self-start">
+                    <div className="w-8 h-8 rounded-full bg-accent-dark flex items-center justify-center text-[11px] font-bold text-text-100 shrink-0 mt-1">AI</div>
+                    <div className="flex items-center gap-1 px-5 py-4 bg-bg-700 border border-border rounded-lg rounded-bl text-text-200 text-sm leading-relaxed">
+                      <span className="w-2 h-2 bg-text-400 rounded-full" style={{ animation: 'typingBounce 1.4s ease-in-out infinite' }} />
+                      <span className="w-2 h-2 bg-text-400 rounded-full" style={{ animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.2s' }} />
+                      <span className="w-2 h-2 bg-text-400 rounded-full" style={{ animation: 'typingBounce 1.4s ease-in-out infinite', animationDelay: '0.4s' }} />
                     </div>
                   </div>
                 )}
@@ -327,13 +340,13 @@ const Interview = () => {
           </div>
 
           {isComplete ? (
-            <div className={styles.completeOverlay}>
-              <svg className={styles.completeIcon} width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-10 gap-4">
+              <svg className="w-16 h-16 text-success" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
-              <h2 className={styles.completeTitle}>Interview Complete</h2>
-              <p className={styles.completeSubtitle}>
+              <h2 className="text-2xl font-bold text-text-100 m-0">Interview Complete</h2>
+              <p className="text-sm text-text-300 m-0">
                 You have completed all {questionCount} questions. Great effort!
               </p>
               <Button variant="primary" onClick={() => navigate(`/jobs/${id}`)}>
@@ -341,20 +354,21 @@ const Interview = () => {
               </Button>
             </div>
           ) : isStarted && (
-            <div className={styles.inputArea}>
+            <div className="shrink-0 border-t border-border p-4 bg-bg-900 flex gap-2.5 items-end">
               <textarea
                 ref={textareaRef}
-                className={styles.textarea}
+                className="flex-1 min-h-[80px] bg-bg-700 border border-border rounded-lg px-3.5 py-2.5 text-sm leading-relaxed text-text-100 resize-none outline-none font-inherit focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-glow)] placeholder:text-text-400"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Type your answer or click the mic to speak..."
                 disabled={isLoading}
               />
-              <div className={styles.buttonColumn}>
+              <div className="flex flex-col gap-2 shrink-0">
                 {voiceSupported ? (
                   <button
-                    className={`${styles.circleButton} ${styles.micButton} ${isListening ? styles.micListening : ''}`}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shrink-0 disabled:opacity-40 disabled:cursor-not-allowed ${isListening ? 'bg-danger text-white border-danger' : 'border border-border bg-transparent text-text-300 hover:border-border-bright hover:text-text-200'}`}
+                    style={isListening ? { animation: 'micPulse 1.5s ease-in-out infinite' } : {}}
                     onClick={isListening ? stopRecognition : startRecognition}
                     disabled={isLoading}
                     title={isListening ? 'Stop recording' : 'Start recording'}
@@ -362,14 +376,17 @@ const Interview = () => {
                     <MicIcon />
                   </button>
                 ) : (
-                  <span className={styles.tooltip} data-tooltip="Use Chrome or Edge for voice">
-                    <button className={`${styles.circleButton} ${styles.micButton}`} disabled>
+                  <span className="relative group">
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover:block bg-bg-700 text-text-200 text-[11px] px-2 py-1 rounded-sm whitespace-nowrap border border-border pointer-events-none z-10">
+                      Use Chrome or Edge for voice
+                    </div>
+                    <button className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 border border-border bg-transparent text-text-300 opacity-40 cursor-not-allowed" disabled>
                       <MicIcon />
                     </button>
                   </span>
                 )}
                 <button
-                  className={`${styles.circleButton} ${styles.sendButton}`}
+                  className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shrink-0 border-none bg-accent text-white hover:bg-accent-light disabled:opacity-40 disabled:cursor-not-allowed"
                   onClick={sendAnswer}
                   disabled={!inputText.trim() || isLoading}
                   title="Send answer"
@@ -381,20 +398,20 @@ const Interview = () => {
           )}
         </div>
 
-        <div className={styles.rightPanel}>
-          <div className={styles.rightCard}>
-            <h3 className={styles.cardTitle}>Job Details</h3>
-            <div className={styles.jobField}>
-              <span className={styles.fieldLabel}>Role</span>
-              <span className={styles.fieldValue}>{job.role}</span>
+        <div className="hidden md:flex md:flex-col gap-4 overflow-y-auto min-w-[240px] flex-[3]">
+          <div className="bg-bg-900 border border-border rounded-lg p-4">
+            <h3 className="text-sm font-bold text-text-100 m-0 mb-3">Job Details</h3>
+            <div className="flex flex-col gap-0.5 mb-2.5">
+              <span className="text-xs text-text-400 uppercase tracking-[0.5px]">Role</span>
+              <span className="text-sm text-text-200 font-medium">{job.role}</span>
             </div>
-            <div className={styles.jobField}>
-              <span className={styles.fieldLabel}>Company</span>
-              <span className={styles.fieldValue}>{job.company}</span>
+            <div className="flex flex-col gap-0.5 mb-2.5">
+              <span className="text-xs text-text-400 uppercase tracking-[0.5px]">Company</span>
+              <span className="text-sm text-text-200 font-medium">{job.company}</span>
             </div>
-            <div className={styles.jobField}>
-              <span className={styles.fieldLabel}>Applied</span>
-              <span className={styles.fieldValue}>
+            <div className="flex flex-col gap-0.5 mb-2.5">
+              <span className="text-xs text-text-400 uppercase tracking-[0.5px]">Applied</span>
+              <span className="text-sm text-text-200 font-medium">
                 {new Date(job.appliedAt || job.createdAt).toLocaleDateString('en-US', {
                   month: 'short', day: 'numeric', year: 'numeric',
                 })}
@@ -402,28 +419,36 @@ const Interview = () => {
             </div>
           </div>
 
-          <div className={styles.rightCard}>
-            <h3 className={styles.cardTitle}>Interview Tips</h3>
-            <ul className={styles.tipList}>
-              <li className={styles.tipItem}>Use STAR method (Situation, Task, Action, Result)</li>
-              <li className={styles.tipItem}>Quantify your achievements</li>
-              <li className={styles.tipItem}>Think aloud for technical questions</li>
-              <li className={styles.tipItem}>Ask clarifying questions if needed</li>
+          <div className="bg-bg-900 border border-border rounded-lg p-4">
+            <h3 className="text-sm font-bold text-text-100 m-0 mb-3">Interview Tips</h3>
+            <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
+              <li className="text-xs text-text-300 leading-relaxed pl-4 relative before:content-['\u2022'] before:absolute before:left-0 before:text-accent before:font-bold">
+                Use STAR method (Situation, Task, Action, Result)
+              </li>
+              <li className="text-xs text-text-300 leading-relaxed pl-4 relative before:content-['\u2022'] before:absolute before:left-0 before:text-accent before:font-bold">
+                Quantify your achievements
+              </li>
+              <li className="text-xs text-text-300 leading-relaxed pl-4 relative before:content-['\u2022'] before:absolute before:left-0 before:text-accent before:font-bold">
+                Think aloud for technical questions
+              </li>
+              <li className="text-xs text-text-300 leading-relaxed pl-4 relative before:content-['\u2022'] before:absolute before:left-0 before:text-accent before:font-bold">
+                Ask clarifying questions if needed
+              </li>
             </ul>
           </div>
 
           {isListening && (
-            <div className={styles.rightCard}>
-              <h3 className={styles.cardTitle}>Voice Status</h3>
-              <div className={styles.voiceStatus}>
-                <div className={styles.waveform}>
-                  <div className={styles.waveBar} />
-                  <div className={styles.waveBar} />
-                  <div className={styles.waveBar} />
-                  <div className={styles.waveBar} />
-                  <div className={styles.waveBar} />
+            <div className="bg-bg-900 border border-border rounded-lg p-4">
+              <h3 className="text-sm font-bold text-text-100 m-0 mb-3">Voice Status</h3>
+              <div className="flex items-center gap-2.5 pt-3">
+                <div className="flex items-center gap-0.5 h-5">
+                  <div className="w-0.5 bg-danger rounded" style={{ height: '8px', animation: 'wave 0.8s ease-in-out infinite' }} />
+                  <div className="w-0.5 bg-danger rounded" style={{ height: '14px', animation: 'wave 0.8s ease-in-out infinite', animationDelay: '0.1s' }} />
+                  <div className="w-0.5 bg-danger rounded" style={{ height: '10px', animation: 'wave 0.8s ease-in-out infinite', animationDelay: '0.2s' }} />
+                  <div className="w-0.5 bg-danger rounded" style={{ height: '18px', animation: 'wave 0.8s ease-in-out infinite', animationDelay: '0.3s' }} />
+                  <div className="w-0.5 bg-danger rounded" style={{ height: '12px', animation: 'wave 0.8s ease-in-out infinite', animationDelay: '0.4s' }} />
                 </div>
-                <span className={styles.listeningLabel}>Listening...</span>
+                <span className="text-xs text-danger font-medium">Listening...</span>
               </div>
             </div>
           )}

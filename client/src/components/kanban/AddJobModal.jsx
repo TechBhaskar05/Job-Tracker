@@ -36,15 +36,15 @@ const AddJobModal = ({ isOpen, onClose, onJobAdded }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Job Application" size="md">
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input label="Role*" value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g., Software Engineer" required />
         <Input label="Company*" value={company} onChange={(e) => setCompany(e.target.value)} placeholder="e.g., Google" required />
-        <label style={{fontSize: '12px', color: 'var(--text-300)', marginBottom: '-12px'}}>Job Description</label>
+        <label className="text-xs text-text-300 -mb-3">Job Description</label>
         <textarea value={jobDesc} onChange={(e) => setJobDesc(e.target.value)} rows={5} placeholder="Paste the job description here..."></textarea>
         <Input label="Job URL" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://careers.google.com/..." />
-        <label style={{fontSize: '12px', color: 'var(--text-300)', marginBottom: '-12px'}}>Notes</label>
+        <label className="text-xs text-text-300 -mb-3">Notes</label>
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Any notes about this application..."></textarea>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '16px' }}>
+        <div className="flex justify-end gap-3 mt-4">
           <Button type="button" variant="secondary" onClick={onClose}>Cancel</Button>
           <Button type="submit" variant="primary" loading={loading}>Add Job</Button>
         </div>

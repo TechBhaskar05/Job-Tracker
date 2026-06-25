@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Badge from '../ui/Badge';
-import styles from './Kanban.module.css';
 
 const timeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
@@ -39,20 +38,19 @@ const JobCard = ({ job }) => {
   };
 
   const handleClick = (e) => {
-    // Prevent navigation when clicking the drag handle
-    if (e.target.closest(`.${styles.dragHandle}`)) return;
+    if (e.target.closest('[data-drag-handle]')) return;
     navigate(`/jobs/${job._id}`);
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} className={styles.card} onClick={handleClick}>
-      <div className={styles.cardHeader}>
-        <h4 className={styles.company}>{job.company}</h4>
-        <button {...listeners} className={styles.dragHandle}>⠿</button>
+    <div ref={setNodeRef} style={style} {...attributes} className="bg-bg-700 border border-border rounded p-3.5 cursor-pointer transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[var(--shadow-accent)] hover:border-border-bright" onClick={handleClick}>
+      <div className="flex justify-between items-start">
+        <h4 className="font-bold text-sm text-accent">{job.company}</h4>
+        <button data-drag-handle {...listeners} className="bg-transparent text-text-400 cursor-grab p-0 text-lg hover:text-text-200">⠿</button>
       </div>
-      <p className={styles.role}>{job.role}</p>
-      <div className={styles.cardFooter}>
-        <span className={styles.timeAgo}>{timeAgo(job.appliedAt)}</span>
+      <p className="text-text-100 text-xs font-medium mt-2">{job.role}</p>
+      <div className="flex justify-between items-center mt-3">
+        <span className="text-text-400 text-[11px]">{timeAgo(job.appliedAt)}</span>
         <Badge stage={job.stage} size="sm" />
       </div>
     </div>
