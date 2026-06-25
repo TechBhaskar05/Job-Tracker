@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './Timeline.module.css';
 
 const timeAgo = (date) => {
     if (!date) return '';
@@ -20,18 +19,18 @@ const timeAgo = (date) => {
 
 const Timeline = ({ history }) => {
   return (
-    <div className={styles.timeline}>
+    <div className="flex flex-col gap-4">
       {history.map((item, index) => (
-        <div key={index} className={styles.timelineItem}>
-          <div className={styles.timelineConnector}>
-            <div className={styles.timelineDot}></div>
-            {index < history.length - 1 && <div className={styles.timelineLine}></div>}
+        <div key={index} className="flex gap-4">
+          <div className="flex flex-col items-center">
+            <div className="w-2 h-2 rounded-full bg-accent shrink-0"></div>
+            {index < history.length - 1 && <div className="w-[2px] flex-1 bg-border"></div>}
           </div>
-          <div className={styles.timelineContent}>
-            <p className={styles.timelineText}>
+          <div className="pb-4">
+            <p className="text-text-200 text-sm font-medium">
               {item.fromStage} → {item.toStage}
             </p>
-            <span className={styles.timelineTime}>{timeAgo(item.changedAt)}</span>
+            <span className="text-text-400 text-xs">{timeAgo(item.changedAt)}</span>
           </div>
         </div>
       ))}

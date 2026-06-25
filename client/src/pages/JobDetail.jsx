@@ -10,7 +10,6 @@ import Modal from '../components/ui/Modal';
 import CompanyInfoCard from '../components/job-detail/CompanyInfoCard';
 import CircularScore from '../components/job-detail/CircularScore';
 import Timeline from '../components/job-detail/Timeline';
-import styles from './JobDetail.module.css';
 
 const timeAgo = (date) => {
     if (!date) return '';
@@ -119,20 +118,20 @@ const JobDetail = () => {
   if (loading) {
     return (
       <PageLayout>
-        <div className={styles.page}>
-           <Button variant="ghost" size="sm" onClick={() => navigate('/')} className={styles.backButton}>
+        <div className="p-6 max-w-[1200px] mx-auto">
+           <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="mb-4">
              ← Back to Board
            </Button>
-          <div className={styles.grid}>
-            <div className={styles.leftColumn}>
+          <div className="grid md:grid-cols-[58%_1fr] grid-cols-1 gap-6">
+            <div className="flex flex-col gap-6">
               <Skeleton height="40px" width="60%" />
-              <Skeleton height="30px" width="40%" style={{ marginTop: '8px' }} />
-              <div style={{ display: 'flex', gap: '16px', marginTop: '24px' }}>
+              <Skeleton height="30px" width="40%" className="mt-2" />
+              <div className="flex gap-4 mt-6">
                 <Skeleton height="34px" width="150px" />
                 <Skeleton height="34px" width="150px" />
               </div>
             </div>
-            <div className={styles.rightColumn}>
+            <div className="flex flex-col gap-6">
               <Skeleton height="300px" />
             </div>
           </div>
@@ -143,27 +142,33 @@ const JobDetail = () => {
 
   return (
     <PageLayout title={`${job.role} at ${job.company}`}>
-      <div className={styles.page}>
-        <Button variant="ghost" size="sm" onClick={() => navigate('/')} className={styles.backButton}>
+      <style>{`
+        @keyframes fadeInOut {
+          0%, 100% { opacity: 0; }
+          20%, 80% { opacity: 1; }
+        }
+      `}</style>
+      <div className="p-6 max-w-[1200px] mx-auto">
+        <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="mb-4">
           ← Back to Board
         </Button>
-        <div className={styles.grid}>
-          <div className={styles.leftColumn}>
-            <header className={styles.header}>
-              <h1 className={styles.company}>{job.company}</h1>
-              <h2 className={styles.role}>{job.role}</h2>
-              <div className={styles.meta}>
+        <div className="grid md:grid-cols-[58%_1fr] grid-cols-1 gap-6">
+          <div className="flex flex-col gap-6">
+            <header className="pb-6 border-b border-border-subtle">
+              <h1 className="text-[26px] font-bold text-accent">{job.company}</h1>
+              <h2 className="text-xl text-text-100 mt-1">{job.role}</h2>
+              <div className="flex items-center gap-3 mt-3 text-text-400 text-xs">
                 <Badge stage={job.stage} />
                 <span>Applied {timeAgo(job.appliedAt)}</span>
               </div>
               {job.url && (
-                <a href={job.url} target="_blank" rel="noopener noreferrer" className={styles.urlChip}>
+                <a href={job.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-accent-tint text-accent px-2.5 py-1 rounded-full text-xs mt-3 border border-border hover:bg-bg-600 hover:no-underline">
                   🔗 {new URL(job.url).hostname}
                 </a>
               )}
             </header>
 
-            <div className={styles.actionButtons}>
+            <div className="flex gap-3">
               <Button variant="primary" size="sm" onClick={handleTailorResume} loading={tailorLoading}>
                 {tailorLoading ? 'Tailoring...' : 'Tailor Resume'}
               </Button>
@@ -175,62 +180,62 @@ const JobDetail = () => {
               </Button>
             </div>
             
-            <section className={styles.section}>
-                <label className={styles.label}>Notes</label>
+            <section className="flex flex-col gap-2">
+                <label className="text-text-300 text-xs font-bold uppercase tracking-[0.08em]">Notes</label>
                 <div style={{position: 'relative'}}>
                     <textarea 
-                        className={styles.notesTextarea}
+                        className="w-full bg-bg-800 border border-transparent rounded-lg p-3 min-h-[80px] focus:bg-bg-700 focus:border-border"
                         rows={4} 
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         onBlur={handleNotesBlur}
                         placeholder="Add your notes here..."
                     />
-                    {isNotesSaved && <span className={styles.savedFlash}>Saved</span>}
+                    {isNotesSaved && <span className="absolute bottom-2 right-2 text-text-400 text-xs" style={{ animation: 'fadeInOut 1.5s ease' }}>Saved</span>}
                 </div>
             </section>
 
             {job.tailoredResume && (
-              <section className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <label className={styles.label}>AI-Tailored Resume</label>
+              <section className="flex flex-col gap-2">
+                <div className="flex justify-between items-center">
+                    <label className="text-text-300 text-xs font-bold uppercase tracking-[0.08em]">AI-Tailored Resume</label>
                     <Button variant="ghost" size="sm" onClick={handleCopyResume}>
                         📋 Copy
                     </Button>
                 </div>
-                <pre className={styles.resumeContent}>{job.tailoredResume}</pre>
+                <pre className="bg-bg-950 border border-border-subtle border-l-[3px] border-l-accent p-4 text-xs text-text-200 overflow-x-auto whitespace-pre-wrap rounded-sm max-h-[300px]">{job.tailoredResume}</pre>
               </section>
             )}
             
             {job.atsScore !== null && typeof job.atsScore === 'number' && (
-                <section className={styles.section}>
-                    <div className={styles.atsContainer}>
+                <section className="flex flex-col gap-2">
+                    <div className="flex items-center gap-4 bg-bg-800 p-4 rounded-lg">
                         <CircularScore score={job.atsScore} />
-                        <label className={styles.label}>ATS Score</label>
+                        <label className="text-text-300 text-xs font-bold uppercase tracking-[0.08em]">ATS Score</label>
                     </div>
                 </section>
             )}
 
             {job.stageHistory && job.stageHistory.length > 0 && (
-                <section className={styles.section}>
-                    <label className={styles.label}>Stage History</label>
+                <section className="flex flex-col gap-2">
+                    <label className="text-text-300 text-xs font-bold uppercase tracking-[0.08em]">Stage History</label>
                     <Timeline history={job.stageHistory} />
                 </section>
             )}
 
-            <div className={styles.deleteSection}>
+            <div className="mt-auto pt-6 border-t border-border-subtle">
                 <Button variant="danger" onClick={() => setIsDeleteModalOpen(true)}>Delete Job</Button>
             </div>
           </div>
 
-          <div className={styles.rightColumn}>
+          <div className="flex flex-col gap-6">
             <CompanyInfoCard companyInfo={job.companyInfo} companyName={job.company} />
           </div>
         </div>
       </div>
       <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} title="Delete Job Application">
         <p>Are you sure you want to delete this application? This action cannot be undone.</p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
+        <div className="flex justify-end gap-3 mt-6">
           <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
           <Button variant="danger" onClick={handleDeleteJob}>Delete</Button>
         </div>

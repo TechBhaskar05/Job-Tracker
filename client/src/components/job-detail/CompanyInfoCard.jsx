@@ -1,30 +1,29 @@
 import React from 'react';
 import Skeleton from '../ui/Skeleton';
-import styles from './CompanyInfoCard.module.css';
 
 const CompanyInfoCard = ({ companyInfo, companyName }) => {
   const isLoaded = companyInfo && companyInfo.fetchedAt;
 
   return (
-    <div className={styles.companyCard}>
+    <div className="bg-bg-800 border border-border rounded-lg p-5">
       {isLoaded ? (
         <>
-          <h3 className={styles.companyCardHeader}>{companyName}</h3>
-          <div className={styles.companySection}>
-            <label className={styles.label}>About</label>
-            <p>{companyInfo.summary}</p>
+          <h3 className="text-lg font-bold text-accent mb-4">{companyName}</h3>
+          <div className="mb-4">
+            <label className="block text-text-400 text-xs font-bold uppercase tracking-wider mb-1">About</label>
+            <p className="text-text-200 text-sm">{companyInfo.summary}</p>
           </div>
-          <div className={styles.companySection}>
-            <label className={styles.label}>Culture</label>
-            <p>{companyInfo.culture}</p>
+          <div className="mb-4">
+            <label className="block text-text-400 text-xs font-bold uppercase tracking-wider mb-1">Culture</label>
+            <p className="text-text-200 text-sm">{companyInfo.culture}</p>
           </div>
-          <div className={styles.companySection}>
-            <label className={styles.label}>In the News</label>
-            <p>{companyInfo.news}</p>
+          <div className="mb-4">
+            <label className="block text-text-400 text-xs font-bold uppercase tracking-wider mb-1">In the News</label>
+            <p className="text-text-200 text-sm">{companyInfo.news}</p>
           </div>
         </>
       ) : (
-        <div className={styles.researchingState}>
+        <div className="p-5">
           <Skeleton height="20px" width="50%" style={{ marginBottom: '24px' }} />
           <Skeleton height="14px" style={{ marginBottom: '8px' }} />
           <Skeleton height="14px" style={{ marginBottom: '8px' }} />
@@ -32,7 +31,7 @@ const CompanyInfoCard = ({ companyInfo, companyName }) => {
           <Skeleton height="14px" width="70%" style={{ marginBottom: '24px' }} />
           <Skeleton height="14px" style={{ marginBottom: '8px' }} />
           <Skeleton height="14px" style={{ marginBottom: '8px' }} />
-          <p className={styles.researchingText}>Researching {companyName}...</p>
+          <p className="mt-5 text-text-400 text-sm text-center">Researching {companyName}...</p>
         </div>
       )}
     </div>
