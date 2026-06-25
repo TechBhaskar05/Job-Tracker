@@ -106,7 +106,7 @@ const Navbar = () => {
         console.error("Failed to mark notification as read");
       }
       if (notif.jobId) {
-          navigate(`/jobs/${notif.jobId}`);
+          navigate(`/board/jobs/${notif.jobId}`);
       }
       setIsNotifOpen(false);
   }
@@ -128,10 +128,10 @@ const Navbar = () => {
           <span className="text-accent font-bold text-lg">JobTrackr</span>
         </div>
         <nav className="hidden md:flex items-center gap-2">
-          <NavLink to="/" end className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
-          <NavLink to="/quiz" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Quiz</NavLink>
-          <NavLink to="/ats" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>ATS Analyser</NavLink>
-          <NavLink to="/roadmap" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Roadmap</NavLink>
+          <NavLink to="/board" end className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
+          <NavLink to="/board/quiz" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Quiz</NavLink>
+          <NavLink to="/board/ats" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>ATS Analyser</NavLink>
+          <NavLink to="/board/roadmap" className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Roadmap</NavLink>
         </nav>
         <div className="flex items-center gap-3">
           <div className="relative" ref={notifRef}>
@@ -179,7 +179,7 @@ const Navbar = () => {
               </button>
               {isUserMenuOpen && (
                   <div className="absolute right-0 top-[140%] bg-bg-800 border border-border rounded-lg shadow-lg z-50 overflow-hidden" style={{width: '180px'}}>
-                      <button onClick={() => { navigate('/profile'); setIsUserMenuOpen(false); }} className="block w-full text-left px-4 py-2.5 text-sm bg-transparent text-text-200 border-none hover:bg-bg-700 hover:text-text-100 cursor-pointer">Profile</button>
+                      <button onClick={() => { navigate('/board/profile'); setIsUserMenuOpen(false); }} className="block w-full text-left px-4 py-2.5 text-sm bg-transparent text-text-200 border-none hover:bg-bg-700 hover:text-text-100 cursor-pointer">Profile</button>
                       <button onClick={handleLogout} className="block w-full text-left px-4 py-2.5 text-sm bg-transparent text-danger border-none hover:bg-bg-700 hover:text-text-100 cursor-pointer">Logout</button>
                   </div>
               )}
@@ -195,11 +195,11 @@ const Navbar = () => {
           <span className="text-accent font-bold text-lg">JobTrackr</span>
         </div>
         <nav className="flex flex-col gap-1 flex-1">
-          <NavLink to="/" end onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
-          <NavLink to="/quiz" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Quiz</NavLink>
-          <NavLink to="/ats" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>ATS Analyser</NavLink>
-          <NavLink to="/roadmap" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Roadmap</NavLink>
-          <NavLink to="/profile" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Profile</NavLink>
+          <NavLink to="/board" end onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
+          <NavLink to="/board/quiz" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Quiz</NavLink>
+          <NavLink to="/board/ats" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>ATS Analyser</NavLink>
+          <NavLink to="/board/roadmap" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Roadmap</NavLink>
+          <NavLink to="/board/profile" onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Profile</NavLink>
         </nav>
         <div className="pt-4 border-t border-border-subtle">
           <button onClick={handleLogout} className="w-full text-left px-3 py-2.5 text-sm bg-transparent text-danger border-none rounded hover:bg-bg-700 cursor-pointer">Logout</button>

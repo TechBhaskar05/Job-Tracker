@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 // Pages
+import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Board from './pages/Board.jsx';
@@ -23,10 +24,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/" element={<App />}>
+            <Route path="/board" element={<App />}>
               <Route index element={<Board />} />
               <Route path="jobs/:id" element={<JobDetail />} />
               <Route path="interview/:id" element={<Interview />} />

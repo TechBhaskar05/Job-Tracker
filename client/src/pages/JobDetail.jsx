@@ -36,8 +36,10 @@ const JobDetail = () => {
   const [notes, setNotes] = useState('');
   const [isNotesSaved, setIsNotesSaved] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [researchTimedOut, setResearchTimedOut] = useState(false);
   const notesTimeoutRef = useRef(null);
   const pollingIntervalRef = useRef(null);
+  const pollTimeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -48,22 +50,29 @@ const JobDetail = () => {
         setLoading(false);
 
         if (!data.companyInfo || !data.companyInfo.fetchedAt) {
+          pollTimeoutRef.current = setTimeout(() => {
+            clearInterval(pollingIntervalRef.current);
+            setResearchTimedOut(true);
+          }, 30000);
+
           pollingIntervalRef.current = setInterval(async () => {
             try {
               const { data: updatedJob } = await api.get(`/jobs/${id}`);
               if (updatedJob.companyInfo && updatedJob.companyInfo.fetchedAt) {
                 setJob(updatedJob);
                 clearInterval(pollingIntervalRef.current);
+                clearTimeout(pollTimeoutRef.current);
               }
             } catch (pollError) {
               console.error("Polling error:", pollError);
               clearInterval(pollingIntervalRef.current);
+              clearTimeout(pollTimeoutRef.current);
             }
           }, 3000);
         }
       } catch (error) {
         showToast('Failed to fetch job details.', 'error');
-        navigate('/');
+        navigate('/board');
       }
     };
 
@@ -71,9 +80,40 @@ const JobDetail = () => {
 
     return () => {
       if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
+      if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current);
       if (notesTimeoutRef.current) clearTimeout(notesTimeoutRef.current);
     };
   }, [id, navigate]);
+
+  const handleRetryResearch = async () => {
+    setResearchTimedOut(false);
+    try {
+      await api.post(`/jobs/${id}/research`);
+    } catch {
+      showToast('Failed to trigger research.', 'error');
+      return;
+    }
+
+    pollTimeoutRef.current = setTimeout(() => {
+      clearInterval(pollingIntervalRef.current);
+      setResearchTimedOut(true);
+    }, 30000);
+
+    pollingIntervalRef.current = setInterval(async () => {
+      try {
+        const { data: updatedJob } = await api.get(`/jobs/${id}`);
+        if (updatedJob.companyInfo && updatedJob.companyInfo.fetchedAt) {
+          setJob(updatedJob);
+          clearInterval(pollingIntervalRef.current);
+          clearTimeout(pollTimeoutRef.current);
+        }
+      } catch (pollError) {
+        console.error("Polling error:", pollError);
+        clearInterval(pollingIntervalRef.current);
+        clearTimeout(pollTimeoutRef.current);
+      }
+    }, 3000);
+  };
 
   const handleNotesBlur = async () => {
     if (notes === job.notes) return;
@@ -109,7 +149,7 @@ const JobDetail = () => {
     try {
       await api.delete(`/jobs/${id}`);
       showToast('Job deleted successfully.', 'success');
-      navigate('/');
+      navigate('/board');
     } catch (error) {
       showToast('Failed to delete job.', 'error');
     }
@@ -119,7 +159,7 @@ const JobDetail = () => {
     return (
       <PageLayout>
         <div className="p-6 max-w-[1200px] mx-auto">
-           <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="mb-4">
+           <Button variant="ghost" size="sm" onClick={() => navigate('/board')} className="mb-4">
              ← Back to Board
            </Button>
           <div className="grid md:grid-cols-[58%_1fr] grid-cols-1 gap-6">
@@ -149,7 +189,7 @@ const JobDetail = () => {
         }
       `}</style>
       <div className="p-6 max-w-[1200px] mx-auto">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="mb-4">
+        <Button variant="ghost" size="sm" onClick={() => navigate('/board')} className="mb-4">
           ← Back to Board
         </Button>
         <div className="grid md:grid-cols-[58%_1fr] grid-cols-1 gap-6">
@@ -162,8 +202,8 @@ const JobDetail = () => {
                 <span>Applied {timeAgo(job.appliedAt)}</span>
               </div>
               {job.url && (
-                <a href={job.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-accent-tint text-accent px-2.5 py-1 rounded-full text-xs mt-3 border border-border hover:bg-bg-600 hover:no-underline">
-                  🔗 {new URL(job.url).hostname}
+                <a href={job.url.startsWith('http') ? job.url : `https://${job.url}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 bg-accent-tint text-accent px-2.5 py-1 rounded-full text-xs mt-3 border border-border hover:bg-bg-600 hover:no-underline">
+                  🔗 {(() => { try { return new URL(job.url.startsWith('http') ? job.url : `https://${job.url}`).hostname; } catch { return 'Open Link'; } })()}
                 </a>
               )}
             </header>
@@ -172,10 +212,10 @@ const JobDetail = () => {
               <Button variant="primary" size="sm" onClick={handleTailorResume} loading={tailorLoading}>
                 {tailorLoading ? 'Tailoring...' : 'Tailor Resume'}
               </Button>
-              <Button variant="secondary" size="sm" onClick={() => navigate(`/interview/${id}`)}>
+              <Button variant="secondary" size="sm" onClick={() => navigate(`/board/interview/${id}`)}>
                 Mock Interview
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate(`/ats?jobId=${id}`)}>
+              <Button variant="ghost" size="sm" onClick={() => navigate(`/board/ats?jobId=${id}`)}>
                 ATS Analysis
               </Button>
             </div>
@@ -229,7 +269,7 @@ const JobDetail = () => {
           </div>
 
           <div className="flex flex-col gap-6">
-            <CompanyInfoCard companyInfo={job.companyInfo} companyName={job.company} />
+            <CompanyInfoCard companyInfo={job.companyInfo} companyName={job.company} researchTimedOut={researchTimedOut} onRetry={handleRetryResearch} />
           </div>
         </div>
       </div>

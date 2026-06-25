@@ -16,7 +16,7 @@ const Login = () => {
 
   useEffect(() => {
     if (getToken()) {
-      navigate('/', { replace: true });
+      navigate('/board', { replace: true });
     }
   }, [navigate]);
 
@@ -27,7 +27,7 @@ const Login = () => {
     try {
       const { data } = await api.post('/auth/login', { email, password });
       setAuth(data.token, data.user);
-      navigate('/');
+      navigate('/board');
     } catch (err) {
       const message = err.response?.data?.error || 'Login failed. Please try again.';
       setError(message);

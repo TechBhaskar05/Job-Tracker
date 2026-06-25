@@ -100,23 +100,29 @@ const Board = () => {
   const handleDragEnd = async (event) => {
     const { active, over } = event;
     setActiveJob(null);
-  
+
     if (!over) return;
-  
+
     const activeJob = jobs.find(j => j._id === active.id);
-    const overContainer = over.data.current?.sortable?.containerId;
-    const overStage = overContainer || over.id;
-  
-    if (!activeJob || activeJob.stage === overStage) {
-      return;
+    if (!activeJob) return;
+
+    let targetStage = null;
+
+    if (STAGES.includes(over.id)) {
+      targetStage = over.id;
+    } else {
+      const overJob = jobs.find(j => j._id === over.id);
+      if (overJob) targetStage = overJob.stage;
     }
-  
+
+    if (!targetStage || activeJob.stage === targetStage) return;
+
     const originalJobs = [...jobs];
-  
-    setJobs(prev => prev.map(j => j._id === active.id ? { ...j, stage: overStage } : j));
-  
+
+    setJobs(prev => prev.map(j => j._id === active.id ? { ...j, stage: targetStage } : j));
+
     try {
-      await api.patch(`/jobs/${active.id}`, { stage: overStage });
+      await api.patch(`/jobs/${active.id}`, { stage: targetStage });
       showToast('Job stage updated!', 'success');
     } catch (error) {
       showToast('Failed to update job stage.', 'error');

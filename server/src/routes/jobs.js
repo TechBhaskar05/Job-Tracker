@@ -6,6 +6,7 @@ import {
   getJob,
   updateJob,
   deleteJob,
+  retryResearch,
 } from '../controllers/jobsController.js';
 
 const router = Router();
@@ -17,5 +18,6 @@ router.post('/', createJob);
 router.get('/:id', getJob);
 router.patch('/:id', updateJob);
 router.delete('/:id', deleteJob);
+router.post('/:id/research', retryResearch);
 
 export default router;

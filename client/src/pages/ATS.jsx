@@ -255,7 +255,7 @@ const ATS = () => {
         {result ? (
           <button className="inline-flex items-center gap-1 text-text-300 text-sm mb-6 cursor-pointer bg-none hover:text-accent" onClick={handleReset}>← Back</button>
         ) : (
-          <Link to="/" className="inline-flex items-center gap-1 text-text-300 text-sm mb-6 cursor-pointer bg-none hover:text-accent">← Back</Link>
+          <Link to="/board" className="inline-flex items-center gap-1 text-text-300 text-sm mb-6 cursor-pointer bg-none hover:text-accent">← Back</Link>
         )}
 
         <h1 className="text-[28px] font-bold text-text-100">ATS Resume Analyser</h1>

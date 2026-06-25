@@ -17,7 +17,7 @@ const Register = () => {
 
   useEffect(() => {
     if (getToken()) {
-      navigate('/', { replace: true });
+      navigate('/board', { replace: true });
     }
   }, [navigate]);
 
@@ -32,7 +32,7 @@ const Register = () => {
     try {
       const { data } = await api.post('/auth/register', { name, email, password });
       setAuth(data.token, data.user);
-      navigate('/');
+      navigate('/board');
     } catch (err) {
       const message = err.response?.data?.error || 'Registration failed. Please try again.';
       setError(message);

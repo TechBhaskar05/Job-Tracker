@@ -11,6 +11,13 @@ function extractSection(text, sectionName) {
   return match ? match[1].trim() : ''
 }
 
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms)),
+  ])
+}
+
 async function researchCompany(job) {
   try {
     const company = job.company
@@ -19,13 +26,13 @@ async function researchCompany(job) {
 
     let snippets1 = ''
     try {
-      const res1 = await axios.post(tavilyUrl, {
+      const res1 = await withTimeout(axios.post(tavilyUrl, {
         api_key: tavilyKey,
         query: `${company} company culture engineering team glassdoor 2024`,
         max_results: 4,
         search_depth: 'basic',
         include_answer: false,
-      })
+      }), 10000)
       snippets1 = (res1.data.results || [])
         .map(r => r.content || r.snippet || '')
         .filter(Boolean)
@@ -36,13 +43,13 @@ async function researchCompany(job) {
 
     let snippets2 = ''
     try {
-      const res2 = await axios.post(tavilyUrl, {
+      const res2 = await withTimeout(axios.post(tavilyUrl, {
         api_key: tavilyKey,
         query: `${company} news funding product launch 2024 2025`,
         max_results: 3,
         search_depth: 'basic',
         include_answer: false,
-      })
+      }), 10000)
       snippets2 = (res2.data.results || [])
         .map(r => r.content || r.snippet || '')
         .filter(Boolean)
@@ -58,6 +65,9 @@ async function researchCompany(job) {
 
     if (!webData) {
       console.log('[Research] No web data found for', company)
+      await Job.findByIdAndUpdate(job._id, {
+        companyInfo: { summary: '', culture: '', news: '', fetchedAt: new Date() },
+      })
       return
     }
 
@@ -67,7 +77,7 @@ async function researchCompany(job) {
     ])
 
     const chain = prompt.pipe(getLlm()).pipe(new StringOutputParser())
-    const response = await chain.invoke({ company, webData })
+    const response = await withTimeout(chain.invoke({ company, webData }), 15000)
 
     const summary = extractSection(response, 'COMPANY SUMMARY')
     const culture = extractSection(response, 'CULTURE')
@@ -85,6 +95,9 @@ async function researchCompany(job) {
     console.log('[Research] Completed for', company)
   } catch (err) {
     console.error('[Research] Failed for', job.company, ':', err.message)
+    await Job.findByIdAndUpdate(job._id, {
+      companyInfo: { summary: '', culture: '', news: '', fetchedAt: new Date() },
+    }).catch(e => console.error('[Research] Failed to save fallback state:', e.message))
   }
 }
 

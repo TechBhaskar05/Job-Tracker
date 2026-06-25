@@ -39,7 +39,7 @@ const JobCard = ({ job }) => {
 
   const handleClick = (e) => {
     if (e.target.closest('[data-drag-handle]')) return;
-    navigate(`/jobs/${job._id}`);
+    navigate(`/board/jobs/${job._id}`);
   };
 
   return (

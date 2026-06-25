@@ -71,6 +71,25 @@ export const updateJob = asyncHandler(async (req, res) => {
   res.status(200).json(updatedJob);
 });
 
+export const retryResearch = asyncHandler(async (req, res) => {
+  const job = await Job.findOne({
+    _id: req.params.id,
+    userId: req.user.id,
+  });
+
+  if (!job) {
+    throw new ApiError(404, 'Job not found');
+  }
+
+  await Job.findByIdAndUpdate(job._id, {
+    companyInfo: { summary: '', culture: '', news: '', fetchedAt: null },
+  });
+
+  researchCompany(job);
+
+  res.status(200).json({ message: 'Research triggered' });
+});
+
 export const deleteJob = asyncHandler(async (req, res) => {
   const result = await Job.deleteOne({
     _id: req.params.id,

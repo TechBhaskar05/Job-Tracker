@@ -66,7 +66,7 @@ const Interview = () => {
         setJob(data)
       } catch {
         showToast('Failed to load job details', 'error')
-        navigate('/')
+        navigate('/board')
       } finally {
         setLoading(false)
       }
@@ -349,7 +349,7 @@ const Interview = () => {
               <p className="text-sm text-text-300 m-0">
                 You have completed all {questionCount} questions. Great effort!
               </p>
-              <Button variant="primary" onClick={() => navigate(`/jobs/${id}`)}>
+              <Button variant="primary" onClick={() => navigate(`/board/jobs/${id}`)}>
                 Back to Job Details
               </Button>
             </div>
