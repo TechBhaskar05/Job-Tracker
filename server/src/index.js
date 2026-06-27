@@ -12,7 +12,7 @@ import quizRoutes from './routes/quiz.js';
 import roadmapRoutes from './routes/roadmap.js';
 import notificationRoutes from './routes/notifications.js';
 import profileRoutes from './routes/profile.js';
-import { startScheduler } from './lib/scheduler.js';
+// import { startScheduler } from './lib/scheduler.js';
 
 dotenv.config({ path: './.env' });
 
@@ -36,7 +36,7 @@ app.use(errorHandler);
 
 connectDB()
   .then(() => {
-    startScheduler();
+    // startScheduler();
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

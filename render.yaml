@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: jobtrackr-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8000"
+      - key: CORS_ORIGIN
+        value: https://jobtrackr.vercel.app
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: HUGGINGFACE_TOKEN
+        sync: false
