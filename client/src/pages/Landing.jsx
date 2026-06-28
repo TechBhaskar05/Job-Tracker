@@ -106,7 +106,7 @@ const Landing = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16 bg-bg-950/80 backdrop-blur-xl border-b border-border">
         <Link to="/" className="flex items-center gap-2 no-underline">
           <div className="w-8 h-8 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center font-bold text-sm text-white shadow-[0_0_12px_var(--accent-glow)]">JT</div>
-          <span className="text-text-100 font-bold text-base">JobTrackr</span>
+          <span className="text-text-100 font-bold text-base">JobTracker</span>
         </Link>
         <div className="flex items-center gap-3">
           <Link to="/login" className="text-sm font-medium px-4 py-2 rounded-lg hover:bg-bg-700 transition no-underline" style={{ color: '#8E8DA0' }}>Sign In</Link>
@@ -235,7 +235,7 @@ const Landing = () => {
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-accent/5 to-transparent border border-accent/10 pointer-events-none" style={{ margin: '-1px' }} />
             <div className="relative z-10 px-8 py-16">
               <h2 className="text-3xl md:text-4xl font-bold text-text-100 mb-4">Ready to land your next role?</h2>
-              <p className="text-text-300 text-sm leading-relaxed" style={{ textAlign: 'center', maxWidth: '28rem', marginLeft: 'auto', marginRight: 'auto' }}>Join JobTrackr and let AI handle the busywork while you focus on acing interviews.</p>
+              <p className="text-text-300 text-sm leading-relaxed" style={{ textAlign: 'center', maxWidth: '28rem', marginLeft: 'auto', marginRight: 'auto' }}>Join JobTracker and let AI handle the busywork while you focus on acing interviews.</p>
               <div style={{ height: '48px' }} />
               <Link to="/register" className="inline-flex items-center gap-3 bg-gradient-to-r from-accent to-accent-dark font-semibold px-8 py-4 rounded-lg text-base hover:brightness-110 transition-all no-underline active:scale-[0.97] shadow-[0_0_24px_var(--accent-glow)] hover:shadow-[0_0_40px_var(--accent-glow)]" style={{ color: '#FFF' }}>
                 Get Started Free
@@ -251,7 +251,7 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center font-bold text-xs text-white">JT</div>
-            <span className="text-text-200 font-bold text-sm">JobTrackr</span>
+            <span className="text-text-200 font-bold text-sm">JobTracker</span>
           </div>
           <p className="text-text-400 text-xs">Track smarter. Land faster.</p>
         </div>

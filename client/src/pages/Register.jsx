@@ -65,7 +65,7 @@ const Register = () => {
           <div className="absolute rounded-full blur-[100px] opacity-35" style={{ width: '250px', height: '250px', background: '#6366F1', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', animation: 'float3 15s ease-in-out infinite' }} />
           <div className="relative z-1 text-center">
             <div className="w-12 h-12 bg-accent-tint border border-border text-accent text-2xl font-bold rounded-lg inline-flex items-center justify-center">JT</div>
-            <h1 className="text-3xl font-bold text-text-100 mt-3">JobTrackr</h1>
+            <h1 className="text-3xl font-bold text-text-100 mt-3">JobTracker</h1>
             <p className="text-text-300 text-base">Track smarter. Land faster.</p>
             <ul className="list-none mt-8 text-left inline-block">
               <li className="text-text-200 mb-2 before:content-['✓'] before:text-success before:mr-2">AI Resume Tailoring</li>

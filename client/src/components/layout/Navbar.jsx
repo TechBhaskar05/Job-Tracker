@@ -125,7 +125,7 @@ const Navbar = () => {
             <span className={`block w-5 h-0.5 bg-text-300 rounded transition duration-200 ease-out ${mobileMenuOpen ? '-rotate-45 translate-x-[4px] -translate-y-[4px]' : ''}`}></span>
           </button>
           <div className="w-8 h-8 bg-accent-tint text-accent rounded flex items-center justify-center font-bold mr-2 shrink-0">JT</div>
-          <span className="text-accent font-bold text-lg">JobTrackr</span>
+          <span className="text-accent font-bold text-lg">JobTracker</span>
         </div>
         <nav className="hidden md:flex items-center gap-2">
           <NavLink to="/board" end className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>
@@ -192,7 +192,7 @@ const Navbar = () => {
       <div ref={mobileRef} className={`fixed top-0 left-[-280px] w-[260px] h-full bg-bg-800 border-r border-border z-101 transition-all duration-300 flex flex-col px-4 py-6 ${mobileMenuOpen ? 'left-0' : ''}`}>
         <div className="flex items-center mb-8">
           <div className="w-8 h-8 bg-accent-tint text-accent rounded flex items-center justify-center font-bold mr-2 shrink-0">JT</div>
-          <span className="text-accent font-bold text-lg">JobTrackr</span>
+          <span className="text-accent font-bold text-lg">JobTracker</span>
         </div>
         <nav className="flex flex-col gap-1 flex-1">
           <NavLink to="/board" end onClick={closeMobile} className={({ isActive }) => isActive ? 'text-accent bg-accent-tint text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline' : 'text-text-300 text-sm font-medium px-3 py-1.5 rounded transition duration-200 ease-out no-underline hover:text-text-100 hover:bg-bg-700'}>Board</NavLink>

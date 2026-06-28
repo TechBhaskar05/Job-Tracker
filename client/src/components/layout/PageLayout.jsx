@@ -3,9 +3,9 @@ import React, { useEffect } from 'react';
 const PageLayout = ({ children, title }) => {
   useEffect(() => {
     if (title) {
-      document.title = `${title} — JobTrackr`;
+      document.title = `${title} — JobTracker`;
     } else {
-      document.title = 'JobTrackr';
+      document.title = 'JobTracker';
     }
   }, [title]);
 
