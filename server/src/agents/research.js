@@ -4,11 +4,49 @@ import { StringOutputParser } from '@langchain/core/output_parsers'
 import { getLlm } from '../lib/groq.js'
 import Job from '../models/Job.js'
 
-function extractSection(text, sectionName) {
-  const escaped = sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const regex = new RegExp(`${escaped}:\\s*([\\s\\S]*?)(?=\\n\\n[A-Z ]+:|$)`)
-  const match = text.match(regex)
-  return match ? match[1].trim() : ''
+const SECTION_DEFS = [
+  { name: 'COMPANY SUMMARY', field: 'summary' },
+  { name: 'CULTURE', field: 'culture' },
+  { name: 'RECENT NEWS', field: 'news' },
+]
+
+function cleanSectionText(text) {
+  return text
+    .replace(/\*\*/g, '')
+    .replace(/\*([^*\n]+)\*/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function extractSections(response) {
+  const result = { summary: '', culture: '', news: '' }
+  if (!response) return result
+
+  const headerRegex =
+    /\*{1,2}\s*(COMPANY SUMMARY|CULTURE|RECENT NEWS)\s*:?\s*\*{1,2}|\s(COMPANY SUMMARY|CULTURE|RECENT NEWS)\s*:?|^[ \t]*(COMPANY SUMMARY|CULTURE|RECENT NEWS)\s*:?/gm
+
+  const matches = []
+  let match
+  while ((match = headerRegex.exec(response)) !== null) {
+    const name = match[1] || match[2] || match[3]
+    if (name) matches.push({ name: name.toUpperCase(), index: match.index, start: match.index + match[0].length })
+  }
+
+  if (matches.length === 0) return result
+
+  for (let i = 0; i < matches.length; i++) {
+    const end = i + 1 < matches.length ? matches[i + 1].index : response.length
+    const def = SECTION_DEFS.find(s => s.name === matches[i].name)
+    if (def) result[def.field] = cleanSectionText(response.slice(matches[i].start, end))
+  }
+
+  const first = matches[0]
+  if (first && first.name !== 'COMPANY SUMMARY' && !result.summary) {
+    const leading = cleanSectionText(response.slice(0, first.index))
+    if (leading) result.summary = leading
+  }
+
+  return result
 }
 
 function withTimeout(promise, ms) {
@@ -79,9 +117,10 @@ async function researchCompany(job) {
     const chain = prompt.pipe(getLlm()).pipe(new StringOutputParser())
     const response = await withTimeout(chain.invoke({ company, webData }), 15000)
 
-    const summary = extractSection(response, 'COMPANY SUMMARY')
-    const culture = extractSection(response, 'CULTURE')
-    const news = extractSection(response, 'RECENT NEWS')
+    const sections = extractSections(response)
+    const summary = sections.summary
+    const culture = sections.culture
+    const news = sections.news
 
     await Job.findByIdAndUpdate(job._id, {
       companyInfo: {
