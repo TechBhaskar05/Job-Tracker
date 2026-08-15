@@ -9,7 +9,7 @@ export function getLlm() {
       apiKey: process.env.GROQ_API_KEY,
       model: 'openai/gpt-oss-20b',
       temperature: 0.7,
-      maxTokens: 1200,
+      maxTokens: 3000,
     })
   }
   return _llm
@@ -21,7 +21,7 @@ export function getLlmPrecise() {
       apiKey: process.env.GROQ_API_KEY,
       model: 'openai/gpt-oss-20b',
       temperature: 0.1,
-      maxTokens: 1500,
+      maxTokens: 3000,
     })
   }
   return _llmPrecise
