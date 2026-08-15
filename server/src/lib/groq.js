@@ -7,7 +7,7 @@ export function getLlm() {
   if (!_llm) {
     _llm = new ChatGroq({
       apiKey: process.env.GROQ_API_KEY,
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       temperature: 0.7,
       maxTokens: 1200,
     })
@@ -19,7 +19,7 @@ export function getLlmPrecise() {
   if (!_llmPrecise) {
     _llmPrecise = new ChatGroq({
       apiKey: process.env.GROQ_API_KEY,
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       temperature: 0.1,
       maxTokens: 1500,
     })
